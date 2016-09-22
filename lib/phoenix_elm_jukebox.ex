@@ -12,6 +12,8 @@ defmodule PhoenixElmJukebox do
       supervisor(PhoenixElmJukebox.Repo, []),
       # Start the endpoint when the application starts
       supervisor(PhoenixElmJukebox.Endpoint, []),
+      # Start Phoenix Presence 
+      supervisor(PhoenixElmJukebox.Presence, []),
       # Start your own worker by calling: PhoenixElmJukebox.Worker.start_link(arg1, arg2, arg3)
       # worker(PhoenixElmJukebox.Worker, [arg1, arg2, arg3]),
     ]
