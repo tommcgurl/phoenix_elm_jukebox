@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Html.App as App
 import InputForm
+import Phoenix.Socket
 
 
 init : ( InputForm.Model, Cmd InputForm.Msg )
@@ -20,4 +21,6 @@ main =
 
 subscriptions : InputForm.Model -> Sub InputForm.Msg
 subscriptions model =
-    Sub.none
+    Phoenix.Socket.listen
+        model.phxSocket
+        (InputForm.PhoenixMessage)
