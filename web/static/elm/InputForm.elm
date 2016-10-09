@@ -7,11 +7,19 @@ import Json.Decode as Json
 import Phoenix.Socket
 import Phoenix.Channel
 import Phoenix.Push
+import Json.Encode as JE
+import Json.Decode as JD exposing ((:=))
+
+
+type alias ChatMessage =
+    { body : String }
 
 
 type alias Model =
     { newMessage : String
+    , userName : String
     , messages : List String
+    , joinedAlert : String
     , phxSocket : Phoenix.Socket.Socket Msg
     }
 
@@ -19,6 +27,8 @@ type alias Model =
 initialModel : Model
 initialModel =
     { newMessage = ""
+    , userName = ""
+    , joinedAlert = ""
     , messages = []
     , phxSocket = initPhoenixSocket
     }
@@ -28,6 +38,8 @@ initPhoenixSocket : Phoenix.Socket.Socket Msg
 initPhoenixSocket =
     Phoenix.Socket.init socketServerUrl
         |> Phoenix.Socket.withDebug
+        |> Phoenix.Socket.on "message:new" "room:lobby" ReceiveMessage
+        |> Phoenix.Socket.on "joined:new" "room:lobby" ReceiveJoined
 
 
 socketServerUrl : String
@@ -35,12 +47,23 @@ socketServerUrl =
     "ws://localhost:4000/socket/websocket"
 
 
+userParams : Model -> JE.Value
+userParams model =
+    JE.object [ ( "user", (JE.string model.userName) ) ]
+
+
 type Msg
     = SetNewMessage String
-    | SaveMessage
-    | KeyPress Int
+    | SetUserName String
+    | SendMessage
+    | KeyPressMessageInput Int
+      -- Handle user clicking enter on message input
+    | KeyPressUserNameInput Int
+      -- Handle user clicking enter on userName input
     | JoinChannel
     | PhoenixMessage (Phoenix.Socket.Msg Msg)
+    | ReceiveMessage JE.Value
+    | ReceiveJoined JE.Value
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -51,29 +74,63 @@ update msg model =
             , Cmd.none
             )
 
-        SaveMessage ->
-            ( { model
-                | messages = List.append model.messages [ model.newMessage ]
-                , newMessage = ""
-              }
+        SetUserName newUserName ->
+            ( { model | userName = newUserName }
             , Cmd.none
             )
 
-        KeyPress 13 ->
-            ( { model
-                | messages = List.append model.messages [ model.newMessage ]
-                , newMessage = ""
-              }
-            , Cmd.none
-            )
+        SendMessage ->
+            let
+                payload =
+                    (JE.object [ ( "body", JE.string model.newMessage ) ])
 
-        KeyPress _ ->
+                push' =
+                    Phoenix.Push.init "message:new" "room:lobby"
+                        |> Phoenix.Push.withPayload payload
+
+                ( phxSocket, phxCmd ) =
+                    Phoenix.Socket.push push' model.phxSocket
+            in
+                ( { model
+                    | newMessage = ""
+                    , phxSocket = phxSocket
+                  }
+                , Cmd.map PhoenixMessage phxCmd
+                )
+
+        KeyPressMessageInput 13 ->
+            let
+                payload =
+                    (JE.object [ ( "body", JE.string model.newMessage ) ])
+
+                push' =
+                    Phoenix.Push.init "message:new" "room:lobby"
+                        |> Phoenix.Push.withPayload payload
+
+                ( phxSocket, phxCmd ) =
+                    Phoenix.Socket.push push' model.phxSocket
+            in
+                ( { model
+                    | newMessage = ""
+                    , phxSocket = phxSocket
+                  }
+                , Cmd.map PhoenixMessage phxCmd
+                )
+
+        KeyPressMessageInput _ ->
+            ( model, Cmd.none )
+
+        KeyPressUserNameInput 13 ->
+            ( model, Cmd.none )
+
+        KeyPressUserNameInput _ ->
             ( model, Cmd.none )
 
         JoinChannel ->
             let
                 channel =
                     Phoenix.Channel.init "room:lobby"
+                        |> Phoenix.Channel.withPayload (userParams model)
 
                 ( phxSocket, phxCmd ) =
                     Phoenix.Socket.join channel model.phxSocket
@@ -95,31 +152,93 @@ update msg model =
                 , Cmd.map PhoenixMessage phxCmd
                 )
 
+        ReceiveMessage raw ->
+            case JD.decodeValue socketMessageDecoder raw of
+                Ok chatMessage ->
+                    (Debug.log "Here dat message yo:")
+                        ( { model | messages = List.append model.messages [ chatMessage ] }
+                        , Cmd.none
+                        )
+
+                Err error ->
+                    (Debug.log error)
+                        ( model, Cmd.none )
+
+        ReceiveJoined raw ->
+            case JD.decodeValue socketMessageDecoder raw of
+                Ok chatMessage ->
+                    let
+                        message =
+                            if chatMessage /= model.userName then
+                                chatMessage ++ " just joined the lobby!"
+                            else
+                                "You have joined the lobby!"
+                    in
+                        ( { model | joinedAlert = message }
+                        , Cmd.none
+                        )
+
+                Err error ->
+                    (Debug.log error)
+                        ( model, Cmd.none )
+
+
+socketMessageDecoder : JD.Decoder String
+socketMessageDecoder =
+    ("body" := JD.string)
+
 
 view : Model -> Html Msg
 view model =
     div
-        [ class "input-form-container" ]
-        [ ul
-            [ class "messages" ]
-            (List.map renderMessage model.messages)
-        , input
-            [ placeholder "Type message..."
-            , onInput SetNewMessage
-            , onKeyUp KeyPress
-            , value model.newMessage
-            ]
-            []
-        , button
-            [ onClick SaveMessage ]
-            [ Html.text "Send Message" ]
+        []
+        [ renderAlertIfNeeded model
         , div
-            [ class "join-channel-container" ]
-            [ button
-                [ onClick JoinChannel ]
-                [ text "Click to join :D" ]
+            [ class "input-form-container" ]
+            [ ul
+                [ class "messages" ]
+                (List.map renderMessage model.messages)
+            , div
+                [ class "message-form-container" ]
+                [ input
+                    [ placeholder "Type message..."
+                    , onInput SetNewMessage
+                    , onKeyUp KeyPressMessageInput
+                    , value model.newMessage
+                    ]
+                    []
+                , button
+                    [ onClick SendMessage ]
+                    [ Html.text "Send Message" ]
+                ]
+            , div
+                [ class "join-channel-form-container" ]
+                [ input
+                    [ placeholder "Type username..."
+                    , onInput SetUserName
+                    , onKeyUp KeyPressUserNameInput
+                    , value model.userName
+                    ]
+                    []
+                , button
+                    [ onClick JoinChannel ]
+                    [ text "Click to join :D" ]
+                ]
             ]
         ]
+
+
+renderAlertIfNeeded : Model -> Html Msg
+renderAlertIfNeeded model =
+    div
+        [ class "alert"
+        , class "alert-success"
+        ]
+        [ text model.joinedAlert ]
+
+
+
+-- Custom onKeyUp Event
 
 
 onKeyUp : (Int -> msg) -> Attribute msg

@@ -21,6 +21,4 @@ main =
 
 subscriptions : InputForm.Model -> Sub InputForm.Msg
 subscriptions model =
-    Phoenix.Socket.listen
-        model.phxSocket
-        (InputForm.PhoenixMessage)
+    Phoenix.Socket.listen model.phxSocket (InputForm.PhoenixMessage)
