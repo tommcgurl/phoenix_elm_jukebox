@@ -19,9 +19,7 @@ defmodule PhoenixElmJukebox.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(params, socket) do
-    IO.puts "connect---------------"
-    IO.inspect params
+  def connect(_params, socket) do
     {:ok, socket}
   end
   # Socket id's are topics that allow you to identify all sockets for a given user:
