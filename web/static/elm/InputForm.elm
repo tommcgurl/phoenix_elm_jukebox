@@ -1,5 +1,6 @@
 module InputForm exposing (Msg(PhoenixMessage), initialModel, Model, update, view)
 
+import InputFormCss
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput, on, keyCode)
 import Html.Attributes exposing (class, placeholder, value, type')
@@ -190,51 +191,59 @@ socketMessageDecoder =
 
 view : Model -> Html Msg
 view model =
-    div
-        []
-        [ renderAlertIfNeeded model
-        , div
-            [ class "input-form-container" ]
-            [ ul
-                [ class "messages" ]
-                (List.map renderMessage model.messages)
+    let
+        { class } =
+            InputFormCss.inputFormNamespace
+    in
+        div
+            []
+            [ renderAlertIfNeeded model
             , div
-                [ class "message-form-container" ]
-                [ input
-                    [ placeholder "Type message..."
-                    , onInput SetNewMessage
-                    , onKeyUp KeyPressMessageInput
-                    , value model.newMessage
+                [ class [ InputFormCss.MessageFormContainer ] ]
+                [ ul
+                    [ class [ "messages" ] ]
+                    (List.map renderMessage model.messages)
+                , div
+                    [ class [ "message-form-container" ] ]
+                    [ input
+                        [ placeholder "Type message..."
+                        , onInput SetNewMessage
+                        , onKeyUp KeyPressMessageInput
+                        , value model.newMessage
+                        ]
+                        []
+                    , button
+                        [ onClick SendMessage ]
+                        [ Html.text "Send Message" ]
                     ]
-                    []
-                , button
-                    [ onClick SendMessage ]
-                    [ Html.text "Send Message" ]
-                ]
-            , div
-                [ class "join-channel-form-container" ]
-                [ input
-                    [ placeholder "Type username..."
-                    , onInput SetUserName
-                    , onKeyUp KeyPressUserNameInput
-                    , value model.userName
+                , div
+                    [ class [ InputFormCss.JoinChannelFormContainer ] ]
+                    [ input
+                        [ placeholder "Type username..."
+                        , onInput SetUserName
+                        , onKeyUp KeyPressUserNameInput
+                        , value model.userName
+                        ]
+                        []
+                    , button
+                        [ onClick JoinChannel ]
+                        [ text "Click to join :D" ]
                     ]
-                    []
-                , button
-                    [ onClick JoinChannel ]
-                    [ text "Click to join :D" ]
                 ]
             ]
-        ]
 
 
 renderAlertIfNeeded : Model -> Html Msg
 renderAlertIfNeeded model =
-    div
-        [ class "alert"
-        , class "alert-success"
-        ]
-        [ text model.joinedAlert ]
+    let
+        { class } =
+            InputFormCss.inputFormNamespace
+    in
+        div
+            [ class [ "alert" ]
+            , class [ "alert-success" ]
+            ]
+            [ text model.joinedAlert ]
 
 
 
@@ -248,6 +257,10 @@ onKeyUp tagger =
 
 renderMessage : String -> Html Msg
 renderMessage message =
-    li
-        [ class "message" ]
-        [ Html.text message ]
+    let
+        { class } =
+            InputFormCss.inputFormNamespace
+    in
+        li
+            [ class [ "message" ] ]
+            [ Html.text message ]
