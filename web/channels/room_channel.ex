@@ -1,5 +1,6 @@
 defmodule PhoenixElmJukebox.RoomChannel do
   use PhoenixElmJukebox.Web, :channel
+  alias PhoenixElmJukebox.Message
 
   def join("room:lobby", %{"user" => user}, socket) do
     IO.puts "Joining with username: #{user}"
