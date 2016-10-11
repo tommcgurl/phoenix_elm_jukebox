@@ -1,9 +1,49 @@
-.input-formJoinChannelFormContainer {
-    background-color: rgb(220, 81, 70);
+.input-form-JoinChannelFormContainer {
+    display: flex;
     padding: 10px;
 }
 
-.input-formMessageFormContainer {
-    background-color: rgb(0, 200, 200);
-    padding: 20px;
+.input-form-JoinChannelFormContainer > input {
+    flex: 1;
+    height: 42px;
+    border: 1px solid;
+    border-color: #cccccc;
+    border-radius: 3px;
+    padding: 8px;
+    margin-right: 8px;
+}
+
+.input-form-JoinChannelFormContainer > button {
+    border: 0px;
+    border-radius: 3px;
+    color: #ffffff;
+    background-color: #00B9B8;
+}
+
+.input-form-MessageFormContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 20% 20px;
+}
+
+.input-form-MessageFormContainer > input {
+    margin-bottom: 20px;
+    flex: 1;
+    height: 42px;
+    border: 1px solid;
+    border-color: #cccccc;
+    border-radius: 3px;
+    padding: 8px;
+}
+
+.input-form-MessageFormContainer > button {
+    border: 0px;
+    height: 42px;
+    border-radius: 3px;
+    color: #ffffff;
+    background-color: #00B9B8;
+}
+
+.input-form-MessageFormContainer > button:hover {
+    background-color: #008A89;
 }

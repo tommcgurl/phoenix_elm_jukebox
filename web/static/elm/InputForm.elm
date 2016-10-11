@@ -199,23 +199,10 @@ view model =
             []
             [ renderAlertIfNeeded model
             , div
-                [ class [ InputFormCss.MessageFormContainer ] ]
+                [ class [ "container" ] ]
                 [ ul
                     [ class [ "messages" ] ]
                     (List.map renderMessage model.messages)
-                , div
-                    [ class [ "message-form-container" ] ]
-                    [ input
-                        [ placeholder "Type message..."
-                        , onInput SetNewMessage
-                        , onKeyUp KeyPressMessageInput
-                        , value model.newMessage
-                        ]
-                        []
-                    , button
-                        [ onClick SendMessage ]
-                        [ Html.text "Send Message" ]
-                    ]
                 , div
                     [ class [ InputFormCss.JoinChannelFormContainer ] ]
                     [ input
@@ -228,6 +215,19 @@ view model =
                     , button
                         [ onClick JoinChannel ]
                         [ text "Click to join :D" ]
+                    ]
+                , div
+                    [ class [ InputFormCss.MessageFormContainer ] ]
+                    [ input
+                        [ placeholder "Type message..."
+                        , onInput SetNewMessage
+                        , onKeyUp KeyPressMessageInput
+                        , value model.newMessage
+                        ]
+                        []
+                    , button
+                        [ onClick SendMessage ]
+                        [ Html.text "Send Message" ]
                     ]
                 ]
             ]

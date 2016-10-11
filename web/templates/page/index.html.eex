@@ -1,5 +1,4 @@
 <script src="/js/elm/main.js"></script>
-<link href="/elm/styles.css" rel="stylesheet">
 <div id="root"></div>
 <script>
   Elm.Main.embed(document.getElementById('root'))
