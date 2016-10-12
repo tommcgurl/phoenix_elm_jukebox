@@ -200,14 +200,11 @@ view model =
             InputFormCss.inputFormNamespace
     in
         div
-            []
+            [ class [ InputFormCss.Container ] ]
             [ renderAlertIfNeeded model
             , div
-                [ class [ "container" ] ]
-                [ ul
-                    [ class [ "messages" ] ]
-                    (List.map renderMessage model.messages)
-                , div
+                [ class [ InputFormCss.FormContainer ] ]
+                [ div
                     [ class [ InputFormCss.JoinChannelFormContainer ] ]
                     [ input
                         [ placeholder "Type username..."
@@ -219,6 +216,12 @@ view model =
                     , button
                         [ onClick JoinChannel ]
                         [ text "Click to join :D" ]
+                    ]
+                , div
+                    [ class [ InputFormCss.MessagesContainer ] ]
+                    [ ul
+                        []
+                        (List.map renderMessage model.messages)
                     ]
                 , div
                     [ class [ InputFormCss.MessageFormContainer ] ]

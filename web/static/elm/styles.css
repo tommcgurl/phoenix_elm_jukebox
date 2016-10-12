@@ -1,5 +1,18 @@
+.input-form-Container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-form-FormContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .input-form-JoinChannelFormContainer {
     display: flex;
+    flex: 1;
     padding: 10px;
 }
 
@@ -15,6 +28,7 @@
 
 .input-form-JoinChannelFormContainer > button {
     border: 0px;
+    height: 42px;
     border-radius: 3px;
     color: #ffffff;
     background-color: #00B9B8;
@@ -23,13 +37,14 @@
 .input-form-MessageFormContainer {
     display: flex;
     flex-direction: column;
-    padding: 20% 20px;
+    flex: 2;
+    padding: 5% 20px;
 }
 
 .input-form-MessageFormContainer > input {
     margin-bottom: 20px;
     flex: 1;
-    height: 42px;
+    max-height: 42px;
     border: 1px solid;
     border-color: #cccccc;
     border-radius: 3px;
@@ -46,4 +61,13 @@
 
 .input-form-MessageFormContainer > button:hover {
     background-color: #008A89;
+}
+
+.input-form-MessagesContainer {
+    display: flex;
+    border-radius: 3px;
+    flex-direction: column;
+    flex: 5;
+    background-color: #263238;
+    color: #A9B0BE;
 }
