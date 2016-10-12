@@ -67,6 +67,54 @@ type Msg
     | ReceiveJoined JE.Value
 
 
+
+-- Called by the update function to push a new message
+-- to the Phoenix socket.
+
+
+pushNewMessage : Msg -> Model -> ( Model, Cmd Msg )
+pushNewMessage msg model =
+    let
+        payload =
+            (JE.object [ ( "body", JE.string model.newMessage ) ])
+
+        push' =
+            Phoenix.Push.init "message:new" "room:lobby"
+                |> Phoenix.Push.withPayload payload
+
+        ( phxSocket, phxCmd ) =
+            Phoenix.Socket.push push' model.phxSocket
+    in
+        ( { model
+            | newMessage = ""
+            , phxSocket = phxSocket
+          }
+        , Cmd.map PhoenixMessage phxCmd
+        )
+
+
+
+-- Called by the update function to join the Phoenix
+-- channel.
+
+
+joinChannel : Msg -> Model -> ( Model, Cmd Msg )
+joinChannel msg model =
+    let
+        channel =
+            Phoenix.Channel.init "room:lobby"
+                |> Phoenix.Channel.withPayload (userParams model)
+
+        ( phxSocket, phxCmd ) =
+            Phoenix.Socket.join channel model.phxSocket
+    in
+        ( { model
+            | phxSocket = phxSocket
+          }
+        , Cmd.map PhoenixMessage phxCmd
+        )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -81,66 +129,22 @@ update msg model =
             )
 
         SendMessage ->
-            let
-                payload =
-                    (JE.object [ ( "body", JE.string model.newMessage ) ])
-
-                push' =
-                    Phoenix.Push.init "message:new" "room:lobby"
-                        |> Phoenix.Push.withPayload payload
-
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.push push' model.phxSocket
-            in
-                ( { model
-                    | newMessage = ""
-                    , phxSocket = phxSocket
-                  }
-                , Cmd.map PhoenixMessage phxCmd
-                )
+            pushNewMessage msg model
 
         KeyPressMessageInput 13 ->
-            let
-                payload =
-                    (JE.object [ ( "body", JE.string model.newMessage ) ])
-
-                push' =
-                    Phoenix.Push.init "message:new" "room:lobby"
-                        |> Phoenix.Push.withPayload payload
-
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.push push' model.phxSocket
-            in
-                ( { model
-                    | newMessage = ""
-                    , phxSocket = phxSocket
-                  }
-                , Cmd.map PhoenixMessage phxCmd
-                )
+            pushNewMessage msg model
 
         KeyPressMessageInput _ ->
             ( model, Cmd.none )
 
         KeyPressUserNameInput 13 ->
-            ( model, Cmd.none )
+            joinChannel msg model
 
         KeyPressUserNameInput _ ->
             ( model, Cmd.none )
 
         JoinChannel ->
-            let
-                channel =
-                    Phoenix.Channel.init "room:lobby"
-                        |> Phoenix.Channel.withPayload (userParams model)
-
-                ( phxSocket, phxCmd ) =
-                    Phoenix.Socket.join channel model.phxSocket
-            in
-                ( { model
-                    | phxSocket = phxSocket
-                  }
-                , Cmd.map PhoenixMessage phxCmd
-                )
+            joinChannel msg model
 
         PhoenixMessage msg ->
             let
