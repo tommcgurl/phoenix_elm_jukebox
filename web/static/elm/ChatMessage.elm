@@ -1,13 +1,15 @@
 module ChatMessage exposing (..)
 
 import ChatMessageCss
+import Time exposing (Time)
+import Date exposing (..)
 import Html exposing (..)
 
 
 type alias ChatMessage =
     { body : String
     , user_name : String
-    , timestamp : Int
+    , timestamp : Time
     }
 
 
@@ -15,6 +17,21 @@ view chatMessage =
     let
         { class } =
             ChatMessageCss.messageNamespace
+
+        date =
+            fromTime chatMessage.timestamp
+
+        monthName =
+            month date
+                |> toString
+
+        weekDay =
+            dayOfWeek date
+                |> toString
+
+        dayNumber =
+            day date
+                |> toString
     in
         div
             [ class [ ChatMessageCss.Container ] ]
@@ -26,5 +43,5 @@ view chatMessage =
                 [ text chatMessage.body ]
             , p
                 [ class [ ChatMessageCss.MessageTimestamp ] ]
-                [ text (toString chatMessage.timestamp) ]
+                [ text (weekDay ++ " " ++ monthName ++ " " ++ dayNumber) ]
             ]

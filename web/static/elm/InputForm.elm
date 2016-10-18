@@ -190,7 +190,7 @@ socketMessageDecoder =
     JD.object3 ChatMessage.ChatMessage
         ("body" := JD.string)
         ("user_name" := JD.string)
-        ("timestamp" := JD.int)
+        ("timestamp" := JD.float)
 
 
 view : Model -> Html Msg
