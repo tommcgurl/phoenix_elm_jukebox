@@ -2,6 +2,7 @@ port module Stylesheets exposing (..)
 
 import Css.File exposing (..)
 import InputFormCss
+import ChatMessageCss
 import Html exposing (div)
 import Html.App as Html
 
@@ -11,7 +12,14 @@ port files : CssFileStructure -> Cmd msg
 
 cssFiles : CssFileStructure
 cssFiles =
-    toFileStructure [ ( "styles.css", compile [ InputFormCss.css ] ) ]
+    toFileStructure
+        [ ( "styles.css"
+          , compile
+                [ InputFormCss.css
+                , ChatMessageCss.css
+                ]
+          )
+        ]
 
 
 main : Program Never

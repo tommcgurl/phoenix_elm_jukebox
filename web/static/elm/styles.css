@@ -8,12 +8,14 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .input-form-JoinChannelFormContainer {
     display: flex;
     flex: 1;
     padding: 10px;
+    justify-content: space-around;
 }
 
 .input-form-JoinChannelFormContainer > input {
@@ -70,4 +72,23 @@
     flex: 5;
     background-color: #263238;
     color: #A9B0BE;
+}
+
+.message-Container {
+    display: flex;
+}
+
+.message-MessageAuthor {
+    flex: 2;
+    padding-right: 16px;
+}
+
+.message-MessageBody {
+    flex: 6;
+}
+
+.message-MessageTimestamp {
+    flex: 2;
+    text-align: right;
+    padding-right: 12px;
 }

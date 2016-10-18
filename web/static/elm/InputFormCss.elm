@@ -30,11 +30,13 @@ css =
             [ height (pct 100)
             , displayFlex
             , flexDirection column
+            , justifyContent spaceBetween
             ]
         , (.) JoinChannelFormContainer
             [ displayFlex
             , flex (int 1)
             , padding (px 10)
+            , justifyContent spaceAround
             , children
                 [ input
                     [ flex (int 1)

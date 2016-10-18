@@ -1,6 +1,7 @@
 module InputForm exposing (Msg(PhoenixMessage), initialModel, Model, update, view)
 
 import InputFormCss
+import ChatMessage
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput, on, keyCode)
 import Html.Attributes exposing (class, placeholder, value, type')
@@ -12,14 +13,10 @@ import Json.Encode as JE
 import Json.Decode as JD exposing ((:=))
 
 
-type alias ChatMessage =
-    { body : String }
-
-
 type alias Model =
     { newMessage : String
     , userName : String
-    , messages : List String
+    , messages : List ChatMessage.ChatMessage
     , joinedAlert : String
     , phxSocket : Phoenix.Socket.Socket Msg
     }
@@ -76,7 +73,7 @@ pushNewMessage : Msg -> Model -> ( Model, Cmd Msg )
 pushNewMessage msg model =
     let
         payload =
-            (JE.object [ ( "body", JE.string model.newMessage ) ])
+            (JE.string model.newMessage)
 
         push' =
             Phoenix.Push.init "message:new" "room:lobby"
@@ -174,8 +171,8 @@ update msg model =
                 Ok chatMessage ->
                     let
                         message =
-                            if chatMessage /= model.userName then
-                                chatMessage ++ " just joined the lobby!"
+                            if chatMessage.user_name /= model.userName then
+                                chatMessage.user_name ++ " " ++ chatMessage.body
                             else
                                 "You have joined the lobby!"
                     in
@@ -188,9 +185,12 @@ update msg model =
                         ( model, Cmd.none )
 
 
-socketMessageDecoder : JD.Decoder String
+socketMessageDecoder : JD.Decoder ChatMessage.ChatMessage
 socketMessageDecoder =
-    ("body" := JD.string)
+    JD.object3 ChatMessage.ChatMessage
+        ("body" := JD.string)
+        ("user_name" := JD.string)
+        ("timestamp" := JD.int)
 
 
 view : Model -> Html Msg
@@ -221,7 +221,7 @@ view model =
                     [ class [ InputFormCss.MessagesContainer ] ]
                     [ ul
                         []
-                        (List.map renderMessage model.messages)
+                        (List.map ChatMessage.view model.messages)
                     ]
                 , div
                     [ class [ InputFormCss.MessageFormContainer ] ]
