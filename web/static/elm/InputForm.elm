@@ -18,6 +18,7 @@ type alias Model =
     , userName : String
     , messages : List ChatMessage.ChatMessage
     , joinedAlert : String
+    , hasJoined : Bool
     , phxSocket : Phoenix.Socket.Socket Msg
     }
 
@@ -27,6 +28,7 @@ initialModel =
     { newMessage = ""
     , userName = ""
     , joinedAlert = ""
+    , hasJoined = False
     , messages = []
     , phxSocket = initPhoenixSocket
     }
@@ -176,7 +178,10 @@ update msg model =
                             else
                                 "You have joined the lobby!"
                     in
-                        ( { model | joinedAlert = message }
+                        ( { model
+                            | joinedAlert = message
+                            , hasJoined = True
+                          }
                         , Cmd.none
                         )
 
@@ -193,6 +198,64 @@ socketMessageDecoder =
         ("timestamp" := JD.float)
 
 
+renderJoinView : Model -> List (Html Msg)
+renderJoinView model =
+    let
+        { class } =
+            InputFormCss.inputFormNamespace
+    in
+        [ div
+            [ class [ InputFormCss.JoinChannelFormContainer ] ]
+            [ input
+                [ placeholder "Type username..."
+                , onInput SetUserName
+                , onKeyUp KeyPressUserNameInput
+                , value model.userName
+                ]
+                []
+            , button
+                [ onClick JoinChannel ]
+                [ text "Click to join :D" ]
+            ]
+        ]
+
+
+renderMessagesView : Model -> List (Html Msg)
+renderMessagesView model =
+    let
+        { class } =
+            InputFormCss.inputFormNamespace
+    in
+        [ div
+            [ class [ InputFormCss.MessagesContainer ] ]
+            [ ul
+                []
+                (List.map ChatMessage.view model.messages)
+            ]
+        , div
+            [ class [ InputFormCss.MessageFormContainer ] ]
+            [ input
+                [ placeholder "Type message..."
+                , onInput SetNewMessage
+                , onKeyUp KeyPressMessageInput
+                , value model.newMessage
+                ]
+                []
+            , button
+                [ onClick SendMessage ]
+                [ Html.text "Send Message" ]
+            ]
+        ]
+
+
+renderContent : Model -> List (Html Msg)
+renderContent model =
+    if model.hasJoined then
+        renderMessagesView model
+    else
+        renderJoinView model
+
+
 view : Model -> Html Msg
 view model =
     let
@@ -204,39 +267,7 @@ view model =
             [ renderAlertIfNeeded model
             , div
                 [ class [ InputFormCss.FormContainer ] ]
-                [ div
-                    [ class [ InputFormCss.JoinChannelFormContainer ] ]
-                    [ input
-                        [ placeholder "Type username..."
-                        , onInput SetUserName
-                        , onKeyUp KeyPressUserNameInput
-                        , value model.userName
-                        ]
-                        []
-                    , button
-                        [ onClick JoinChannel ]
-                        [ text "Click to join :D" ]
-                    ]
-                , div
-                    [ class [ InputFormCss.MessagesContainer ] ]
-                    [ ul
-                        []
-                        (List.map ChatMessage.view model.messages)
-                    ]
-                , div
-                    [ class [ InputFormCss.MessageFormContainer ] ]
-                    [ input
-                        [ placeholder "Type message..."
-                        , onInput SetNewMessage
-                        , onKeyUp KeyPressMessageInput
-                        , value model.newMessage
-                        ]
-                        []
-                    , button
-                        [ onClick SendMessage ]
-                        [ Html.text "Send Message" ]
-                    ]
-                ]
+                (renderContent model)
             ]
 
 
