@@ -1,4 +1,5 @@
 defmodule PhoenixElmJukebox.RoomChannel do
+  require Logger
   use PhoenixElmJukebox.Web, :channel
   alias PhoenixElmJukebox.Message
 
@@ -27,6 +28,16 @@ defmodule PhoenixElmJukebox.RoomChannel do
       body: message,
       timestamp: :os.system_time(:milli_seconds)
     }
+    changeset = Message.changeset(%Message{}, %{
+      :user_name => socket.assigns.user,
+      :body => message
+    })
+    case Repo.insert(changeset) do
+      {:ok, _message} ->
+        Logger.debug "Message added successfully."
+      {:error, _changeset} ->
+        Logger.debug "Message failed to send."
+    end
     {:noreply, socket}
   end
 end
