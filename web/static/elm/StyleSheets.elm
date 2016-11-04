@@ -3,6 +3,8 @@ port module Stylesheets exposing (..)
 import Css.File exposing (..)
 import InputFormCss
 import ChatMessageCss
+import ButtonCss
+import InputCss
 import Html exposing (div)
 import Html.App as Html
 
@@ -17,6 +19,8 @@ cssFiles =
           , compile
                 [ InputFormCss.css
                 , ChatMessageCss.css
+                , ButtonCss.css
+                , InputCss.css
                 ]
           )
         ]

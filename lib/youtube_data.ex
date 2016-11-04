@@ -24,4 +24,5 @@ defmodule YoutubeData do
 
   defp decode_body(body) do
     Poison.decode(body)
+  end
 end
