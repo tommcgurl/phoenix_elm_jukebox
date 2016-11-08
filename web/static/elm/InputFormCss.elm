@@ -17,6 +17,7 @@ type CssClasses
     | MessagesContainer
     | Container
     | FormContainer
+    | JoinViewContainer
 
 
 css =
@@ -25,6 +26,7 @@ css =
             [ height (pct 100)
             , displayFlex
             , flexDirection column
+            , fontFamilies [ "Avenir Next" ]
             ]
         , (.) FormContainer
             [ height (pct 100)
@@ -35,6 +37,7 @@ css =
         , (.) JoinChannelFormContainer
             [ displayFlex
             , flex (int 1)
+            , flexDirection column
             , padding (px 10)
             , justifyContent spaceAround
             , children
@@ -62,16 +65,7 @@ css =
             , flex (int 2)
             , padding2 (pct 5) (px 20)
             , children
-                [ input
-                    [ marginBottom (px 20)
-                    , flex (int 1)
-                    , maxHeight (px 42)
-                    , border2 (px 1) solid
-                    , borderColor (hex "#cccccc")
-                    , borderRadius (px 3)
-                    , padding (px 8)
-                    ]
-                , button
+                [ button
                     [ border (px 0)
                     , height (px 42)
                     , borderRadius (px 3)
@@ -88,7 +82,13 @@ css =
             , borderRadius (px 3)
             , flexDirection column
             , flex (int 5)
-            , backgroundColor (hex "#263238")
-            , color (hex "#A9B0BE")
+            , backgroundColor (rgba 216 216 216 0.22)
+            , color (hex "#FFF")
+            ]
+        , (.) JoinViewContainer
+            [ displayFlex
+            , flex (int 1)
+            , flexDirection column
+            , justifyContent center
             ]
         ]

@@ -3,6 +3,15 @@ html, body, #main, .container, #root {
   height: 100%;
 }
 
+body {
+  background: -moz-linear-gradient(right, #085A8E, #AE3B23);
+  background: -webkit-linear-gradient(right, #085A8E, #AE3B23);
+  background: -ms-linear-gradient(right, #085A8E, #AE3B23);
+  background: -o-linear-gradient(right, #085A8E, #AE3B23);
+  background: linear-gradient( 45deg, #085A8E, #AE3B23 );
+  background: linear-gradient(to left top, #085A8E, #AE3B23);
+}
+
 .container {
   display: flex;
   flex-direction: column
@@ -12,4 +21,14 @@ main {
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+/* Normalize some shit */
+input {
+  box-shadow: none;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: none;
+  -webkit-border-radius: none;
 }

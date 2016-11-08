@@ -8,13 +8,16 @@ type alias Label =
     String
 
 
-view label =
+view attributes label =
     let
         { class } =
             ButtonCss.buttonNamespace
+
+        newAttributes =
+            List.append attributes [ class [ ButtonCss.Container ] ]
     in
         div
-            [ class [ ButtonCss.Container ] ]
+            newAttributes
             [ p
                 [ class [ ButtonCss.Label ] ]
                 [ text label ]

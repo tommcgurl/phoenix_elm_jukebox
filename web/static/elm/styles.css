@@ -2,6 +2,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    font-family: Avenir Next;
 }
 
 .input-form-FormContainer {
@@ -14,6 +15,7 @@
 .input-form-JoinChannelFormContainer {
     display: flex;
     flex: 1;
+    flex-direction: column;
     padding: 10px;
     justify-content: space-around;
 }
@@ -43,16 +45,6 @@
     padding: 5% 20px;
 }
 
-.input-form-MessageFormContainer > input {
-    margin-bottom: 20px;
-    flex: 1;
-    max-height: 42px;
-    border: 1px solid;
-    border-color: #cccccc;
-    border-radius: 3px;
-    padding: 8px;
-}
-
 .input-form-MessageFormContainer > button {
     border: 0px;
     height: 42px;
@@ -70,8 +62,15 @@
     border-radius: 3px;
     flex-direction: column;
     flex: 5;
-    background-color: #263238;
-    color: #A9B0BE;
+    background-color: rgba(216, 216, 216, 0.22);
+    color: #FFF;
+}
+
+.input-form-JoinViewContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .message-Container {
@@ -91,4 +90,38 @@
     flex: 2;
     text-align: right;
     padding-right: 12px;
+}
+
+.button-Container {
+    display: flex;
+    border: 1px solid #fff;
+    background-color: rgba(216, 216, 216, 0.22);
+    height: 50px;
+    text-align: center;
+    align-items: center;
+    padding-top: 4px;
+    justify-content: center;
+}
+
+.button-Label {
+    color: #fff;
+    padding-right: 16px;
+    font-family: Avenir Next;
+    font-weight: 200;
+    font-size: 18px;
+}
+
+.input-Container {
+    display: flex;
+    width: 100%;
+    border: 1px solid #979797;
+    background-color: rgba(255, 255, 255, 0.1);
+    height: 50px;
+    padding-left: 24px;
+    outline: none;
+    font-family: Avenir Next;
+    font-weight: 100;
+    font-size: 18px;
+    color: #FFFFFF;
+    margin-bottom: 32px;
 }

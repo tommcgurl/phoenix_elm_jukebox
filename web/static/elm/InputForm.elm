@@ -1,7 +1,9 @@
 module InputForm exposing (Msg(PhoenixMessage), initialModel, Model, update, view)
 
 import InputFormCss
+import Input
 import ChatMessage
+import Button
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput, on, keyCode)
 import Html.Attributes exposing (class, placeholder, value, type')
@@ -205,17 +207,17 @@ renderJoinView model =
             InputFormCss.inputFormNamespace
     in
         [ div
-            [ class [ InputFormCss.JoinChannelFormContainer ] ]
-            [ input
-                [ placeholder "Type username..."
+            [ class [ InputFormCss.JoinViewContainer ] ]
+            [ Input.view
+                [ placeholder "Enter a username"
                 , onInput SetUserName
                 , onKeyUp KeyPressUserNameInput
                 , value model.userName
                 ]
                 []
-            , button
+            , Button.view
                 [ onClick JoinChannel ]
-                [ text "Click to join :D" ]
+                "JOIN"
             ]
         ]
 
@@ -234,16 +236,16 @@ renderMessagesView model =
             ]
         , div
             [ class [ InputFormCss.MessageFormContainer ] ]
-            [ input
-                [ placeholder "Type message..."
+            [ Input.view
+                [ placeholder "Enter a song name"
                 , onInput SetNewMessage
                 , onKeyUp KeyPressMessageInput
                 , value model.newMessage
                 ]
                 []
-            , button
+            , Button.view
                 [ onClick SendMessage ]
-                [ Html.text "Send Message" ]
+                "Cue it up!"
             ]
         ]
 
