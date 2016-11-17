@@ -10,6 +10,9 @@ body {
   background: -o-linear-gradient(right, #085A8E, #AE3B23);
   background: linear-gradient( 45deg, #085A8E, #AE3B23 );
   background: linear-gradient(to left top, #085A8E, #AE3B23);
+  padding-top: 20px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .container {

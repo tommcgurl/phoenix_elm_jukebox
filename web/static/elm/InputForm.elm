@@ -25,13 +25,13 @@ type alias Model =
     }
 
 
-initialModel : Model
-initialModel =
+initialModel : List ChatMessage.ChatMessage -> Model
+initialModel initialMessages =
     { newMessage = ""
     , userName = ""
     , joinedAlert = ""
     , hasJoined = False
-    , messages = []
+    , messages = initialMessages
     , phxSocket = initPhoenixSocket
     }
 

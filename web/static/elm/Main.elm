@@ -2,16 +2,22 @@ module Main exposing (..)
 
 import Html.App as App
 import InputForm
+import ChatMessage exposing (ChatMessage)
 import Phoenix.Socket
 
 
-init : ( InputForm.Model, Cmd InputForm.Msg )
-init =
-    ( InputForm.initialModel, Cmd.none )
+type alias Flags =
+    { messages : List ChatMessage
+    }
+
+
+init : Flags -> ( InputForm.Model, Cmd InputForm.Msg )
+init flags =
+    ( InputForm.initialModel flags.messages, Cmd.none )
 
 
 main =
-    App.program
+    App.programWithFlags
         { init = init
         , update = InputForm.update
         , view = InputForm.view

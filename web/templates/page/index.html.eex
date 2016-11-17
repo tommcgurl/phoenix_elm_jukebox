@@ -1,5 +1,6 @@
 <script src="/js/elm/main.js"></script>
 <div id="root"></div>
 <script>
-  Elm.Main.embed(document.getElementById('root'))
+  var messages = [];
+  Elm.Main.embed(document.getElementById('root'), {messages: messages})
 </script>
