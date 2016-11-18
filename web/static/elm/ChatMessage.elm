@@ -2,14 +2,14 @@ module ChatMessage exposing (..)
 
 import ChatMessageCss
 import Time exposing (Time)
-import Date exposing (..)
+import Date
 import Html exposing (..)
 
 
 type alias ChatMessage =
     { body : String
     , user_name : String
-    , timestamp : Time
+    , timestamp : String
     }
 
 
@@ -18,19 +18,22 @@ view chatMessage =
         { class } =
             ChatMessageCss.messageNamespace
 
+        -- We use Result.withDefault here because converting a string to a date may fail for invalid
+        -- strings
         date =
-            fromTime chatMessage.timestamp
+            Date.fromString chatMessage.timestamp
+                |> Result.withDefault (Date.fromTime 0)
 
         monthName =
-            month date
+            Date.month date
                 |> toString
 
         weekDay =
-            dayOfWeek date
+            Date.dayOfWeek date
                 |> toString
 
         dayNumber =
-            day date
+            Date.day date
                 |> toString
     in
         div

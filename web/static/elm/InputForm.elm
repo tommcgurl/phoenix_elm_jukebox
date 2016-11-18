@@ -197,7 +197,7 @@ socketMessageDecoder =
     JD.object3 ChatMessage.ChatMessage
         ("body" := JD.string)
         ("user_name" := JD.string)
-        ("timestamp" := JD.float)
+        ("timestamp" := JD.string)
 
 
 renderJoinView : Model -> List (Html Msg)

@@ -2,5 +2,6 @@
 <div id="root"></div>
 <script>
   var messages = [];
+  messages = <%={:safe,Poison.Encoder.encode(@messages, [])}%>;
   Elm.Main.embed(document.getElementById('root'), {messages: messages})
 </script>

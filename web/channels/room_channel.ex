@@ -15,7 +15,7 @@ defmodule PhoenixElmJukebox.RoomChannel do
     broadcast! socket, "joined:new", %{
       body: "just joined the lobby!",
       user_name: socket.assigns.user,
-      timestamp: :os.system_time(:milli_seconds)
+      timestamp: Ecto.DateTime.from_erl(:calendar.local_time())
     }
     {:noreply, socket}
   end
@@ -26,7 +26,7 @@ defmodule PhoenixElmJukebox.RoomChannel do
     broadcast! socket, "message:new", %{
       user_name: socket.assigns.user,
       body: message,
-      timestamp: :os.system_time(:milli_seconds)
+      timestamp: Ecto.DateTime.from_erl(:calendar.local_time())
     }
     changeset = Message.changeset(%Message{}, %{
       :user_name => socket.assigns.user,
