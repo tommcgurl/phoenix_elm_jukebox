@@ -2,8 +2,10 @@ defmodule YoutubeData do
   require Logger
 
   def get_url(search_param) do
+    api_key = Application.get_env(:phoenix_elm_jukebox, PhoenixElmJukebox.Endpoint)[:youtube_api_key]
+    IO.inspect api_key
     query = String.replace(search_param, ~r/\s/, "+")
-    "https://www.googleapis.com/youtube/v3/search?part=snippet&q=#{query}&key=<APIKEY>"
+    "https://www.googleapis.com/youtube/v3/search?part=snippet&q=#{query}&key=#{api_key}"
   end
 
   def fetch(search_param) do
