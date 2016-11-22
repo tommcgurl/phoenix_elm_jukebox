@@ -7,26 +7,29 @@ defmodule PhoenixElmJukebox.PageController do
     # data will have to pass through a changeset in order to get into
     # the database, so data coming out should already be valid.
     messages = Repo.all(Message)
-    [ nowPlaying | tail ] = messages
-    case YoutubeData.fetch(nowPlaying.body) do
-      {:ok, data} ->
-        IO.inspect data
-        [item | _tail] = data["items"]
-        IO.puts "this is a test"
-        IO.puts "Yo dis dat data ya'll wanted: #{item["snippet"]["channelTitle"]}"
-        render(
-          conn,
-          "index.html",
-          video_id: item["id"]["videoId"],
-          video_title: item["snippet"]["title"],
-          messages: tail,
-          current_request: nowPlaying
-        )
-      _ ->
-        IO.puts "This is another test"
-        IO.puts "error"
+    if ((length messages) > 0) do
+      [ nowPlaying | tail ] = messages
+      case YoutubeData.fetch(nowPlaying.body) do
+        {:ok, data} ->
+          IO.inspect data
+          [item | _tail] = data["items"]
+          IO.puts "this is a test"
+          IO.puts "Yo dis dat data ya'll wanted: #{item["snippet"]["channelTitle"]}"
+          render(
+            conn,
+            "index.html",
+            video_id: item["id"]["videoId"],
+            video_title: item["snippet"]["title"],
+            messages: tail,
+            current_request: nowPlaying
+          )
+        _ ->
+          IO.puts "This is another test"
+          IO.puts "error"
+      end
+    else
+      render conn, "index.html", messages: messages
     end
-    render conn, "index.html", messages: messages
   end
 end
 
