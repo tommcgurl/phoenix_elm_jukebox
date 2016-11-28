@@ -13,8 +13,6 @@ defmodule PhoenixElmJukebox.PageController do
         {:ok, data} ->
           IO.inspect data
           [item | _tail] = data["items"]
-          IO.puts "this is a test"
-          IO.puts "Yo dis dat data ya'll wanted: #{item["snippet"]["channelTitle"]}"
           render(
             conn,
             "index.html",
@@ -24,7 +22,6 @@ defmodule PhoenixElmJukebox.PageController do
             current_request: nowPlaying
           )
         _ ->
-          IO.puts "This is another test"
           IO.puts "error"
       end
     else
