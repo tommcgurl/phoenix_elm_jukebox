@@ -16,7 +16,7 @@ type CssClasses
 
 css =
     (stylesheet << namespace buttonNamespace.name)
-        [ (.) Container
+        [ class Container
             [ displayFlex
             , border3 (px 1) solid (hex "#fff")
             , backgroundColor (rgba 216 216 216 0.22)
@@ -26,7 +26,7 @@ css =
             , paddingTop (px 4)
             , justifyContent center
             ]
-        , (.) Label
+        , class Label
             [ color (hex "#fff")
             , paddingRight (px 16)
             , fontFamilies [ "Avenir Next" ]

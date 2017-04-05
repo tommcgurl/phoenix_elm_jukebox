@@ -16,7 +16,7 @@ type CssClasses
 
 css =
     (stylesheet << namespace inputNamespace.name)
-        [ (.) Container
+        [ class Container
             [ displayFlex
             , width (pct 100)
             , border3 (px 1) solid (hex "#979797")

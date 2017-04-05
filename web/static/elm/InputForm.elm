@@ -6,13 +6,13 @@ import ChatMessage
 import Button
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput, on, keyCode)
-import Html.Attributes exposing (class, placeholder, value, type')
+import Html.Attributes exposing (class, placeholder, value)
 import Json.Decode as Json
 import Phoenix.Socket
 import Phoenix.Channel
 import Phoenix.Push
 import Json.Encode as JE
-import Json.Decode as JD exposing ((:=))
+import Json.Decode as JD exposing (field)
 
 
 type alias Model =
@@ -79,12 +79,12 @@ pushNewMessage msg model =
         payload =
             (JE.string model.newMessage)
 
-        push' =
+        push_ =
             Phoenix.Push.init "message:new" "room:lobby"
                 |> Phoenix.Push.withPayload payload
 
         ( phxSocket, phxCmd ) =
-            Phoenix.Socket.push push' model.phxSocket
+            Phoenix.Socket.push push_ model.phxSocket
     in
         ( { model
             | newMessage = ""
@@ -194,10 +194,10 @@ update msg model =
 
 socketMessageDecoder : JD.Decoder ChatMessage.ChatMessage
 socketMessageDecoder =
-    JD.object3 ChatMessage.ChatMessage
-        ("body" := JD.string)
-        ("user_name" := JD.string)
-        ("timestamp" := JD.string)
+    JD.map3 ChatMessage.ChatMessage
+        (field "body" JD.string)
+        (field "user_name" JD.string)
+        (field "timestamp" JD.string)
 
 
 renderJoinView : Model -> List (Html Msg)

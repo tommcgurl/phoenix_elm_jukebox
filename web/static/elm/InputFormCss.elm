@@ -22,19 +22,19 @@ type CssClasses
 
 css =
     (stylesheet << namespace inputFormNamespace.name)
-        [ (.) Container
+        [ class Container
             [ height (pct 100)
             , displayFlex
             , flexDirection column
             , fontFamilies [ "Avenir Next" ]
             ]
-        , (.) FormContainer
+        , class FormContainer
             [ height (pct 100)
             , displayFlex
             , flexDirection column
             , justifyContent spaceBetween
             ]
-        , (.) JoinChannelFormContainer
+        , class JoinChannelFormContainer
             [ displayFlex
             , flex (int 1)
             , flexDirection column
@@ -59,7 +59,7 @@ css =
                     ]
                 ]
             ]
-        , (.) MessageFormContainer
+        , class MessageFormContainer
             [ displayFlex
             , flexDirection column
             , flex (int 2)
@@ -77,7 +77,7 @@ css =
                     ]
                 ]
             ]
-        , (.) MessagesContainer
+        , class MessagesContainer
             [ displayFlex
             , borderRadius (px 3)
             , flexDirection column
@@ -85,7 +85,7 @@ css =
             , backgroundColor (rgba 216 216 216 0.22)
             , color (hex "#FFF")
             ]
-        , (.) JoinViewContainer
+        , class JoinViewContainer
             [ displayFlex
             , flex (int 1)
             , flexDirection column

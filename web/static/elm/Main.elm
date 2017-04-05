@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html.App as App
+import Html as Html
 import InputForm
 import ChatMessage exposing (ChatMessage)
 import Phoenix.Socket
@@ -17,7 +17,7 @@ init flags =
 
 
 main =
-    App.programWithFlags
+    Html.programWithFlags
         { init = init
         , update = InputForm.update
         , view = InputForm.view

@@ -19,16 +19,16 @@ type CssClasses
 
 css =
     (stylesheet << namespace messageNamespace.name)
-        [ (.) Container
+        [ class Container
             [ displayFlex ]
-        , (.) MessageAuthor
+        , class MessageAuthor
             [ flex (int 2)
             , paddingRight (px 16)
             ]
-        , (.) MessageBody
+        , class MessageBody
             [ flex (int 6)
             ]
-        , (.) MessageTimestamp
+        , class MessageTimestamp
             [ flex (int 2)
             , textAlign right
             , paddingRight (px 12)
